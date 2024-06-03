@@ -12,5 +12,5 @@ nav_order: 4
 To directly import it into GPG:
 
 ```sh
-curl https://edoars.me/assets/key/gpg-0xC58DA9F9CCAF3F18 | gpg --import
+curl https://edoars.me/assets/key/gpg-0xC58DA9F9CCAF3F18.asc | gpg --import
 ```
