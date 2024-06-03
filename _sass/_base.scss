@@ -749,6 +749,11 @@ footer.sticky-bottom {
           }
         }
 
+        .invited {
+          color: var(--global-theme-color) !important;
+          border: 1px solid var(--global-theme-color);
+        }
+
         .award {
           color: var(--global-theme-color) !important;
           border: 1px solid var(--global-theme-color);
