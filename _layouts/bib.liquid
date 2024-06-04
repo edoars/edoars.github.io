@@ -28,6 +28,9 @@
       {%- if entry.invited -%}
         <span class="invited badge">{{ 'Invited' }}</span>
       {% endif %}
+      {%- if entry.preprint -%}
+        <span class="preprint badge">{{ 'Preprint' }}</span>
+      {% endif %}
       {% if entry.preview %}
         {% if entry.preview contains '://' %}
           <img class="preview z-depth-1 rounded" src="{{ entry.preview }}">
