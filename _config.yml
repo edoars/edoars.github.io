@@ -8,10 +8,10 @@ middle_name:
 last_name: Signorini
 contact_note:
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+  The personal website of Edoardo Signorini
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
-keywords: edoardo-signorini, signorini, cryptography, post-quantum # add your own keywords or leave empty
+keywords: edoardo, signorini, cryptography, post-quantum, telsy, polito # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: logo.jpg # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
@@ -329,6 +329,8 @@ filtered_bibtex_keywords:
     supp,
     video,
     website,
+    invited,
+    preprint,
   ]
 
 # Maximum number of authors to be shown for each publication (more authors are visible on click)
