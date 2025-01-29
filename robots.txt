@@ -1,4 +1,1 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://edoars.me/sitemap.xml
+User-agent: * Disallow: Sitemap: https://edoars.me/sitemap.xml
