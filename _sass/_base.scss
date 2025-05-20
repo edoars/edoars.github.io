@@ -749,11 +749,6 @@ footer.sticky-bottom {
           }
         }
 
-        .invited {
-          color: var(--global-theme-color) !important;
-          border: 1px solid var(--global-theme-color);
-        }
-
         .preprint {
           color: var(--global-theme-color) !important;
           border: 1px solid var(--global-theme-color);
@@ -767,6 +762,13 @@ footer.sticky-bottom {
 
       .title {
         font-weight: bolder;
+          align-items: center !important;
+          display: flex !important;
+
+        .invited {
+          color: var(--global-theme-color) !important;
+          border: 1px solid var(--global-theme-color);
+        }
       }
 
       .author {
