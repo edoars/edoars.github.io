@@ -1,0 +1,13 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+{#- Before the stylesheet, so a saved dark theme applies on first paint. #}
+<script>try { if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch {}</script>
+<title>{% if here.title and here.title != config.title %}{{ here.title }} · {% endif %}{{ config.title }}</title>
+<meta name="description" content="{{ config.description }}">
+<meta name="google-site-verification" content="{{ config.extra.google_site_verification }}">
+<link rel="canonical" href="{{ here.permalink }}">
+<link rel="icon" href="{{ get_url(path='favicon.jpg') }}" type="image/jpeg">
+<link rel="preload" href="{{ get_url(path='fonts/source-serif-4-latin-opsz-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ get_url(path='fonts/ibm-plex-mono-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">

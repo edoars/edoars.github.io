@@ -1,0 +1,84 @@
+@use "mixins" as *;
+
+.year + .year {
+  margin-top: calc(var(--step) * 1.75);
+}
+
+.year__label {
+  @include label;
+  font-size: 0.72rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entries {
+  list-style: none;
+  padding: 0;
+}
+
+.entry {
+  position: relative;
+  padding-block: 0.85rem;
+  scroll-margin-top: var(--step);
+
+  & + & {
+    border-top: 1px solid var(--rule);
+  }
+
+  &:target .entry__title {
+    color: var(--accent);
+  }
+}
+
+// The venue badge hangs in the left margin, level with the title.
+.entry__badge {
+  @include label;
+  @include hang(1.05rem);
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--accent);
+}
+
+.entry__title {
+  font-weight: 500;
+  line-height: 1.35;
+  text-wrap: pretty;
+
+  a {
+    @include quiet-link;
+  }
+}
+
+.entry__authors {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.entry__venue {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.meta {
+  @include label;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.9rem;
+  margin-top: 0.4rem;
+
+  a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+
+    &:hover {
+      border-bottom-color: var(--accent);
+    }
+  }
+}
+
+.tag {
+  color: var(--accent);
+}

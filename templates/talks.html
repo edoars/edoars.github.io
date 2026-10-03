@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block preload %}
+<link rel="preload" href="{{ get_url(path='fonts/source-serif-4-latin-opsz-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
+{% block content %}
+{%- set bib = load_data(path="data/talks.bib", format="bibtex") %}
+{%- set talks = bib.bibliographies | sort(attribute="tags.month") | sort(attribute="tags.year") | reverse %}
+{%- set years = [k.tags.year for k in talks] | unique | sort | reverse %}
+<h1 class="visually-hidden">Talks</h1>
+{%- for year in years %}
+<section class="year">
+  <h2 class="year__label">{{ year }}</h2>
+  <ol class="entries">
+    {%- for k in [k for k in talks if k.tags.year == year] %}
+    {%- set t = k.tags %}
+    {%- set date = t.date | replace(from="-", to="–") %}
+    {%- set venue = <clean s={t.title} /> %}
+    <li class="entry talk" id="{{ k.citation_key | slugify }}">
+      <div>
+        <span class="entry__badge">{{ t.abbr }}</span>
+        <p class="talk__venue">
+          {{- venue }}
+          {%- if t.invited %} <span class="tag">invited</span>{% endif -%}
+        </p>
+        <p class="talk__when">{{ <clean s={t.location} /> }} · {{ date }}</p>
+        <p class="talk__title">{{ <clean s={t.talktitle} /> }}</p>
+        {%- if t.slides or t.video or t.event %}
+        <p class="meta">
+          {%- if t.slides %}<a href="{{ get_url(path='talks/' ~ t.slides) }}">slides</a>{% endif %}
+          {%- if t.video %}<a href="{{ t.video }}">video</a>{% endif %}
+          {%- if t.event %}<a href="{{ t.event | trim }}">event</a>{% endif %}
+        </p>
+        {%- endif %}
+      </div>
+      {%- if t.photo %}
+      {#- Thumbnails cropped to the 3:2 frame, 1x and 2x; the lightbox gets at most 1600px wide, never upscaled. #}
+      {%- set photo = "talks/" ~ t.photo %}
+      {%- set thumb = resize_image(path=photo, width=320, height=213, op="fill", format="webp", quality=75) %}
+      {%- set thumb2x = resize_image(path=photo, width=640, height=427, op="fill", format="webp", quality=75) %}
+      {%- set orig = get_image_metadata(path=photo) %}
+      {%- set full = resize_image(path=photo, width=orig.width if orig.width < 1600 else 1600, op="fit_width", format="webp", quality=80) %}
+      <figure class="talk__thumb">
+        <a class="talk__zoom" href="{{ full.url }}" data-caption="{{ venue }}, {{ date }}" aria-label="Enlarge photo">
+          <img src="{{ thumb.url }}" srcset="{{ thumb.url }} 320w, {{ thumb2x.url }} 640w" sizes="(max-width: 34rem) calc(100vw - 32px), 9.5rem" width="320" height="213" alt="" loading="lazy" decoding="async">
+        </a>
+      </figure>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ol>
+</section>
+{%- endfor %}
+
+<dialog class="lightbox" aria-label="Enlarged photo">
+  <figure>
+    <figcaption></figcaption>
+  </figure>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ get_url(path='js/lightbox.js', cachebust=true) }}"></script>
+{% endblock %}

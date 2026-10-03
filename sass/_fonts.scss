@@ -1,0 +1,11 @@
+@use "mixins" as *;
+
+// Source Serif 4 (text) and IBM Plex Mono (labels), both OFL, self-hosted.
+// prettier-ignore
+@include faces("Source Serif 4", "source-serif-4", "opsz-normal", normal, 200 900);
+// prettier-ignore
+@include faces("Source Serif 4", "source-serif-4", "opsz-italic", italic, 200 900);
+// prettier-ignore
+@include faces("IBM Plex Mono", "ibm-plex-mono", "400-normal", normal, 400);
+// prettier-ignore
+@include faces("IBM Plex Mono", "ibm-plex-mono", "500-normal", normal, 500);

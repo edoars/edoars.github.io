@@ -1,0 +1,220 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+$portrait: clamp(8.5rem, 22vw, 10.5rem);
+
+.intro {
+  display: grid;
+  grid-template-columns: $portrait 1fr;
+  gap: 0 clamp(1.25rem, 3vw, 2rem);
+  align-items: start;
+}
+
+// Short, the bio centres on the portrait; unfolded, it runs down from the portrait's top.
+.intro__bio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: $portrait;
+}
+
+.portrait {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  box-shadow:
+    0 2px 5px rgb(0 0 0 / 0.16),
+    0 2px 10px rgb(0 0 0 / 0.12);
+  container-type: inline-size;
+}
+
+.portrait__img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+// Hovered, the photo fades back into the paper and the bishop's randomart fills the frame.
+.randomart {
+  position: absolute;
+  inset: 0;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  font-family: var(--mono);
+  // 19 × 11 characters, each 0.6em wide: a line-height of 11.4 / 11 makes the box square.
+  font-size: calc(92cqi / 11.4);
+  line-height: calc(11.4 / 11);
+  color: var(--muted);
+  opacity: 0;
+  pointer-events: none;
+
+  span {
+    color: var(--ink);
+  }
+
+  .randomart__head {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .randomart__end {
+    font-weight: 500;
+  }
+}
+
+.portrait.is-walking {
+  .portrait__img {
+    opacity: 0.1;
+    filter: grayscale(1) blur(2px);
+  }
+
+  .randomart {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portrait__img,
+  .randomart {
+    transition:
+      opacity 0.35s $ease-out,
+      filter 0.35s ease,
+      transform 0.35s $ease-out;
+  }
+
+  .randomart {
+    transform: scale(0.96);
+  }
+
+  .portrait.is-walking .randomart {
+    transform: none;
+  }
+}
+
+.elsewhere {
+  margin-top: 0.9rem;
+  padding-inline: 0.1rem;
+}
+
+// Five equal columns, each centred: icons above, fingerprint groups below.
+.elsewhere__icons,
+.elsewhere__pgp {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+  align-items: center;
+}
+
+.elsewhere__icons a {
+  color: var(--muted);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+.elsewhere__icons svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.elsewhere__pgp {
+  row-gap: 0.1rem;
+  margin-top: 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  code {
+    font-family: inherit;
+  }
+
+  &:hover,
+  &:hover .elsewhere__muted {
+    color: var(--accent);
+  }
+}
+
+.elsewhere__muted {
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+
+// The rest of the bio, folded by js/bio.js; it clips while it rolls.
+.intro__more {
+  min-height: 0;
+  overflow: clip;
+  overflow-clip-margin: 0.4rem;
+
+  // Padding, not margin, so the first gap stays inside the rolling height.
+  p {
+    padding-top: 0.8rem;
+  }
+}
+
+// A link-like toggle under the bio; the arrow points where the text will go.
+.intro__toggle {
+  @include label;
+  align-self: flex-start;
+  margin-top: 0.7rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &::after {
+    content: " ↓" / "";
+  }
+
+  &[aria-expanded="true"]::after {
+    content: " ↑" / "";
+  }
+
+  &:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
+// The bio is rendered folded for js/bio.js, so nothing moves on load; without scripting, unfold it.
+@media (scripting: none) {
+  .intro__more[hidden] {
+    display: block;
+  }
+
+  .intro__toggle {
+    display: none;
+  }
+}
+
+// Narrow screens: stack, with the portrait and the icons under it centred in one compact column.
+@media (max-width: $narrow) {
+  .intro {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .intro__side {
+    width: min(100%, 15rem);
+    margin-inline: auto;
+  }
+
+  .intro__bio {
+    min-height: 0;
+  }
+
+  .elsewhere {
+    margin-top: 1.25rem;
+  }
+}

@@ -1,0 +1,26 @@
+{#- Strip BibTeX braces/escapes and collapse the whitespace left by wrapped fields. -#}
+{% component clean(s: string) -%}
+{{ s | replace(from="--", to="–") | regex_replace(pattern="[{}\\\\]", rep="") | regex_replace(pattern="\\s+", rep=" ") | trim }}
+{%- endcomponent clean %}
+
+{#- "with G. D'Alconzo, A. J. Di Scala": every "Last, First" or "First Last" author but `me`. -#}
+{% component coauthors(authors: string, me: string) -%}
+{%- set_global names = [] -%}
+{%- for a in authors | regex_replace(pattern="\\s+", rep=" ") | split(pat=" and ") -%}
+  {%- set a = a | trim -%}
+  {%- if "," in a -%}
+    {%- set parts = a | split(pat=",") -%}
+    {%- set last = parts[0] | trim -%}
+    {%- set given = parts[1] | trim -%}
+  {%- else -%}
+    {%- set words = a | split(pat=" ") -%}
+    {%- set last = words[-1] -%}
+    {%- set given = words[:-1] | join(sep=" ") -%}
+  {%- endif -%}
+  {%- if last != me -%}
+    {%- set initials = [w[0] ~ "." for w in given | split(pat=" ") if w] | join(sep=" ") -%}
+    {%- set_global names = [...names, (initials ~ " " ~ last) | replace(from=" ", to=" ")] -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if names %}with {{ names | join(sep=", ") }}{% endif -%}
+{%- endcomponent coauthors %}

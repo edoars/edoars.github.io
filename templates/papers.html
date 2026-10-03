@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block preload %}
+<link rel="preload" href="{{ get_url(path='fonts/source-serif-4-latin-opsz-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
+{% block content %}
+{%- set bib = load_data(path="data/papers.bib", format="bibtex") %}
+{#- Newest first; entries without a month sort as January. -#}
+{%- set papers = [{...p, "order": p.tags.month if "month" in p.tags else "00"} for p in bib.bibliographies] %}
+{%- set years = [p.tags.year for p in papers] | unique | sort | reverse %}
+<h1 class="visually-hidden">Papers</h1>
+{%- for year in years %}
+<section class="year">
+  <h2 class="year__label">{{ year }}</h2>
+  <ol class="entries">
+    {%- for p in [p for p in papers if p.tags.year == year] | sort(attribute="order") | reverse %}
+    {%- set t = p.tags %}
+    {%- set doi = t.doi | default(value="") | replace(from="\\_", to="_") %}
+    {%- set link = t.url or t.html or ("https://doi.org/" ~ doi if doi else "") %}
+    {%- set venue = t.journal or t.booktitle or t.howpublished or t.school or ("arXiv:" ~ t.eprint if "eprint" in t else "") %}
+    <li class="entry" id="{{ p.citation_key | slugify }}">
+      <span class="entry__badge">{{ t.abbr }}</span>
+      <p class="entry__title">
+        {%- if link %}<a href="{{ link }}">{{ <clean s={t.title} /> }}</a>{% else %}{{ <clean s={t.title} /> }}{% endif -%}
+      </p>
+      {%- set with = <coauthors authors={t.author} me={config.extra.surname} /> %}
+      {%- if with %}
+      <p class="entry__authors">{{ with }}</p>
+      {%- endif %}
+      {%- if venue %}
+      <p class="entry__venue">{{ <clean s={venue} /> }}</p>
+      {%- endif %}
+      <p class="meta">
+        {%- if t.preprint %}<span class="tag">preprint</span>{% endif %}
+        {%- if t.pdf %}<a href="{{ t.pdf if t.pdf is starting_with(pat='http') else get_url(path='papers/' ~ t.pdf) }}">pdf</a>{% endif %}
+        {%- if doi %}<a href="https://doi.org/{{ doi }}">doi</a>{% endif %}
+      </p>
+    </li>
+    {%- endfor %}
+  </ol>
+</section>
+{%- endfor %}
+{% endblock %}

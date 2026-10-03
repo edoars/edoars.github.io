@@ -1,0 +1,35 @@
+base_url = "https://edoars.me"
+title = "Edoardo Signorini"
+description = "Edoardo Signorini, post-quantum cryptographer."
+default_language = "en"
+
+compile_sass = true
+minify_html = true
+generate_feeds = false
+build_search_index = false
+
+[markdown]
+smart_punctuation = true
+
+[extra]
+# The wave on each page draws sha256(domain ~ path); fixed so `zola serve` draws the same lines.
+domain = "edoars.me"
+google_site_verification = "wpb983aCXRlNqz07fOJY1l8a3Ri12dBn4oZOYiXyigs"
+
+# Left out of the coauthors listed under each paper.
+surname = "Signorini"
+
+# Masthead links, each to content/<name>.md.
+nav = ["papers", "talks"]
+
+pgp_fingerprint = "EA68 0D70 95FE 7E0F 799F 32F3 C58D A9F9 CCAF 3F18"
+pgp_key = "/public-key.asc"
+
+# Shown as icons under the portrait, in this order; `title` appears on hover.
+links = [
+  { name = "email", icon = "material/mail", url = "mailto:edoardo@edoars.me", title = "edoardo@edoars.me" },
+  { name = "github", icon = "simple-icons/github", url = "https://github.com/edoars", title = "github.com/edoars" },
+  { name = "scholar", icon = "simple-icons/googlescholar", url = "https://scholar.google.com/citations?user=WpvGgz8AAAAJ", title = "Google Scholar" },
+  { name = "orcid", icon = "simple-icons/orcid", url = "https://orcid.org/0000-0002-1224-6732", title = "0000-0002-1224-6732" },
+  { name = "linkedin", icon = "simple-icons/linkedin", url = "https://www.linkedin.com/in/edoardo-signorini", title = "in/edoardo-signorini" },
+]

@@ -1,0 +1,28 @@
+:root {
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --paper: #f3f1ea;
+  --paper-raised: #e9e6dc;
+  --ink: #1b1a17;
+  --muted: #6b665c;
+  --rule: #d9d4c7;
+  --rule-strong: #bdb6a6;
+  --accent: #1f5c4a;
+
+  --measure: 40rem;
+  --step: 1.5rem;
+  color-scheme: light;
+}
+
+// Light by default; dark only when asked for with the moon in the masthead (see js/masthead.js).
+:root[data-theme="dark"] {
+  --paper: #131311;
+  --paper-raised: #1c1c19;
+  --ink: #e4e0d6;
+  --muted: #979184;
+  --rule: #2c2b27;
+  --rule-strong: #45433d;
+  --accent: #7cc4ab;
+  color-scheme: dark;
+}

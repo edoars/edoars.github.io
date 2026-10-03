@@ -1,0 +1,40 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.foot {
+  @include label;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 0.6rem;
+  margin-top: calc(var(--step) * 3);
+  padding-top: var(--step);
+  border-top: 1px solid var(--rule);
+  text-transform: none;
+  letter-spacing: 0.02em;
+
+  a {
+    @include quiet-link;
+  }
+
+  code {
+    font-family: inherit;
+  }
+}
+
+.foot__store {
+  font-size: min(1em, 2.5vw);
+  white-space: nowrap;
+}
+
+// Too narrow for one line: stack the two, and drop the dot between them.
+@media (max-width: $narrow) {
+  .foot {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .foot__sep {
+    display: none;
+  }
+}

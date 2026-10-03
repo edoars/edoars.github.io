@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="intro">
+  <div class="intro__side">
+    {#- On hover, js/randomart.js turns the portrait into the randomart of sha256(name and today's date). #}
+    <div class="portrait" data-name="{{ config.title }}">
+      {%- set portrait = resize_image(path="portrait.jpg", width=336, height=336, op="fill", format="webp", quality=80) %}
+      {%- set portrait2x = resize_image(path="portrait.jpg", width=672, height=672, op="fill", format="webp", quality=80) %}
+      <img class="portrait__img" src="{{ portrait.url }}" srcset="{{ portrait.url }} 336w, {{ portrait2x.url }} 672w" sizes="(max-width: 34rem) 15rem, 10.5rem" width="336" height="336" alt="{{ config.title }}">
+      <pre class="randomart" aria-hidden="true"></pre>
+    </div>
+    {#- Under the portrait: five icons over the fingerprint's ten groups, in the same five columns. #}
+    <div class="elsewhere">
+      <nav class="elsewhere__icons" aria-label="Elsewhere">
+        {%- for l in config.extra.links %}
+        <a href="{{ l.url }}" title="{{ l.title }}" aria-label="{{ l.name }}">{{ <icon path={l.icon} /> }}</a>
+        {%- endfor %}
+      </nav>
+      {#- The last four groups are the long key ID, so they get the ink. #}
+      <a class="elsewhere__pgp" id="pgp" href="{{ get_url(path=config.extra.pgp_key) }}" title="Download the PGP public key">
+        {%- for g in config.extra.pgp_fingerprint | split(pat=" ") %}<code{% if loop.index0 < 6 %} class="elsewhere__muted"{% endif %}>{{ g }}</code>{% endfor -%}
+      </a>
+    </div>
+  </div>
+  {#- The bio up to `<!-- more -->` sits by the portrait; the rest unfolds right under it. #}
+  {%- set bio = section.content | split(pat='<span id="continue-reading"></span>') %}
+  <div class="intro__bio">
+    {{ bio[0] | safe }}
+    {%- if bio | length > 1 %}
+    <div class="intro__more" id="bio-more" hidden>{{ bio[1] | safe }}</div>
+    <button class="intro__toggle" type="button" aria-expanded="false" aria-controls="bio-more">more about me</button>
+    {%- endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ get_url(path='js/randomart.js', cachebust=true) }}"></script>
+<script type="module" src="{{ get_url(path='js/bio.js', cachebust=true) }}"></script>
+{% endblock %}

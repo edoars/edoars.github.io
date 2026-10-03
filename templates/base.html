@@ -1,0 +1,22 @@
+{%- set here = section if section is defined else (page if page is defined else {"title": "Not found", "path": "/404.html", "permalink": config.base_url ~ "/404.html"}) -%}
+{%- set path = here.path -%}
+<!doctype html>
+<html lang="{{ config.default_language }}">
+<head>
+  {% include "partials/head.html" %}
+  {%- block preload %}{% endblock %}
+</head>
+<body>
+  <div class="page">
+    {% include "partials/masthead.html" %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/footer.html" %}
+  </div>
+  <script type="module" src="{{ get_url(path='js/masthead.js', cachebust=true) }}"></script>
+  {%- block scripts %}{% endblock %}
+</body>
+</html>

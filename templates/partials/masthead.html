@@ -1,0 +1,28 @@
+<header class="masthead">
+  <a class="masthead__name" href="{{ get_url(path='/') }}">{{ config.title }}</a>
+  <nav class="masthead__nav">
+    {%- for page in config.extra.nav %}
+    <a href="{{ get_url(path='@/' ~ page ~ '.md') }}"{% if path == "/" ~ page ~ "/" %} aria-current="page"{% endif %}>{{ page }}</a>
+    {%- endfor %}
+    <button class="theme-toggle" type="button" aria-label="dark theme" title="dark theme" aria-pressed="false">
+      {{ <icon path="material/dark_mode" /> }}
+      {{ <icon path="material/light_mode" /> }}
+    </button>
+  </nav>
+  {{ <wave text={config.extra.domain ~ path} /> }}
+  <script>
+    {
+      const wave = document.querySelector(".wave__lit");
+      const label = document.querySelector(".masthead__nav [aria-current]") || document.querySelector(".masthead__name");
+      const place = () => {
+        const w = wave.getBoundingClientRect();
+        const r = label.getBoundingClientRect();
+        wave.style.setProperty("--lit-from", `${r.left - w.left}px`);
+        wave.style.setProperty("--lit-to", `${r.right - w.left}px`);
+      };
+      place();
+      document.fonts.ready.then(place);
+      addEventListener("resize", place);
+    }
+  </script>
+</header>

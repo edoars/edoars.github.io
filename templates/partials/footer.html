@@ -1,0 +1,9 @@
+<footer class="foot">
+  <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>
+  {#- Only set by `nix build`. #}
+  {%- set store_path = get_env(name="SITE_STORE_PATH", default="") %}
+  {%- if store_path %}
+  <span class="foot__sep" aria-hidden="true">·</span>
+  <code class="foot__store" title="This site is built by Nix">{{ store_path }}</code>
+  {%- endif %}
+</footer>

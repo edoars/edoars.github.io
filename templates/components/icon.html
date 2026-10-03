@@ -1,0 +1,9 @@
+{#- An upstream SVG from data/icons. -#}
+{% component icon(path: string) -%}
+{{ load_data(path="data/icons/" ~ path ~ ".svg", format="plain")
+  | trim
+  | regex_replace(pattern="<title>[^<]*</title>", rep="")
+  | regex_replace(pattern="\\s(role|width|height)=\"[^\"]*\"", rep="")
+  | replace(from="<svg ", to="<svg aria-hidden=\"true\" focusable=\"false\" ")
+  | safe }}
+{%- endcomponent icon %}

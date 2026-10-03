@@ -1,0 +1,31 @@
+{#- Catmull-Rom spline through (x0 + i*dx, ys[i]), as cubic Béziers. -#}
+{% component curve(ys: array, x0: number, dx: number) -%}
+{%- set n = ys | length -%}
+{%- set_global segs = [] -%}
+{%- for i in range(end=n - 1) -%}
+  {%- set x = x0 + i * dx -%}
+  {%- set prev = ys[i - 1 if i > 0 else 0] -%}
+  {%- set next = ys[i + 2 if i + 2 < n else n - 1] -%}
+  {%- set c1 = (x + dx / 3) | round(precision=1) ~ "," ~ (ys[i] + (ys[i + 1] - prev) / 6) | round(precision=1) -%}
+  {%- set c2 = (x + 2 * dx / 3) | round(precision=1) ~ "," ~ (ys[i + 1] - (next - ys[i]) / 6) | round(precision=1) -%}
+  {%- set end = (x0 + (i + 1) * dx) | round(precision=1) ~ "," ~ ys[i + 1] | round(precision=1) -%}
+  {%- set_global segs = [...segs, "C" ~ c1 ~ " " ~ c2 ~ " " ~ end] -%}
+{%- endfor -%}
+M{{ x0 }},{{ ys[0] | round(precision=1) }} {{ segs | join(sep=" ") }}
+{%- endcomponent curve %}
+
+{#- The masthead line: the 32 bytes of sha256(text), drawn left to right. -#}
+{% component wave(text: string) -%}
+{%- set digest = get_hash(literal=text, sha_type=256, base64=false) -%}
+{%- set ys = [12 + (digest[2 * i:2 * i + 2] | int(base=16)) * 76 / 255 for i in range(end=32)] -%}
+{%- set d = <curve ys={ys} x0={0} dx={1000 / 31} /> -%}
+{#- A grey base, and a lit copy masked to the current page's label. -#}
+<div class="wave" title="sha256(&quot;{{ text }}&quot;) = {{ digest }}">
+  <svg class="wave__base" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="{{ d }}" />
+  </svg>
+  <svg class="wave__lit" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="{{ d }}" />
+  </svg>
+</div>
+{%- endcomponent wave %}

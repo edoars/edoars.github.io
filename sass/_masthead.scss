@@ -1,0 +1,149 @@
+@use "mixins" as *;
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding-top: calc(var(--step) * 2);
+  margin-bottom: calc(var(--step) * 2);
+}
+
+.masthead__name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+}
+
+.masthead__nav {
+  display: flex;
+  gap: 1.1rem;
+
+  a {
+    @include label;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+
+    &:hover {
+      color: var(--accent);
+      border-bottom-color: currentColor;
+    }
+
+    // The wave marks the current page; the label only takes the colour.
+    &[aria-current] {
+      color: var(--accent);
+    }
+  }
+}
+
+// A small moon after the nav (a sun in the dark): the only way into the dark theme.
+.theme-toggle {
+  align-self: center;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  opacity: 0.65;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+  }
+
+  // The icon shows the theme a click switches to.
+  svg + svg {
+    display: none;
+  }
+}
+
+[data-theme="dark"] .theme-toggle {
+  svg:first-child {
+    display: none;
+  }
+
+  svg + svg {
+    display: block;
+  }
+}
+
+// Rendered for js/masthead.js, so it needs no reveal on load; without scripting it can't work.
+@media (scripting: none) {
+  .theme-toggle {
+    display: none;
+  }
+}
+
+.wave {
+  position: relative;
+  flex-basis: 100%;
+  height: 26px;
+  margin-top: 0.6rem;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  path {
+    fill: none;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.wave__base path {
+  stroke: var(--rule-strong);
+}
+
+// Only the stretch under the current page's label (set by the script in partials/masthead.html), faded at both edges.
+.wave__lit {
+  $fade: 0.5rem;
+  $mask: linear-gradient(
+    to right,
+    transparent calc(var(--lit-from) - #{$fade}),
+    #000 calc(var(--lit-from) + #{$fade}),
+    #000 calc(var(--lit-to) - #{$fade}),
+    transparent calc(var(--lit-to) + #{$fade})
+  );
+  --lit-from: 0px;
+  --lit-to: 0px;
+  -webkit-mask-image: $mask;
+  mask-image: $mask;
+
+  path {
+    stroke: var(--accent);
+    stroke-width: 1.8;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // Clip sweep, not dashes: non-scaling-stroke measures dashes in screen px.
+  @keyframes draw {
+    from {
+      clip-path: inset(-2px 100% -2px -2px);
+    }
+    to {
+      clip-path: inset(-2px);
+    }
+  }
+
+  .wave svg {
+    animation: draw 1.4s cubic-bezier(0.3, 0.5, 0.3, 1) 0.1s backwards;
+  }
+}
